@@ -64,8 +64,7 @@ bottom of the page before the break rather than at the top of
 the page after the break!)
 
 
-Alternative syntax
-------------------
+### Alternative syntax
 
 The form feed character as the only element in a paragraph is
 supported as an alternative to the LaTeX syntax described above.
