@@ -24,14 +24,26 @@ function code_blocks (code_file)
   }
 end
 
+function download_link (filename)
+  return pandoc.Para{
+    pandoc.Str "Download",
+    pandoc.Space(),
+    pandoc.Link(filename, filename, filename)
+  }
+end
+
 function Pandoc (doc)
   local meta = doc.meta
   local blocks = doc.blocks
 
-  blocks:extend{pandoc.Header(2, 'Example', pandoc.Attr('Example'))}
-  blocks:extend(sample_blocks(meta.sample_files))
-  blocks:extend{pandoc.Header(2, 'Code', pandoc.Attr('Code'))}
-  blocks:extend(code_blocks(meta.code_file))
+  local sample_file = os.getenv("SAMPLE_FILE")
+  local filter_file = os.getenv("FILTER_FILE")
+
+  blocks:extend{pandoc.Header(2, 'Example', pandoc.Attr('example'))}
+  blocks:extend(sample_blocks(sample_file))
+  blocks:extend{pandoc.Header(2, 'Code', pandoc.Attr('code'))}
+  blocks:insert(download_link(filter_file))
+  blocks:extend(code_blocks(filter_file))
 
   return pandoc.Pandoc(blocks, meta)
 end

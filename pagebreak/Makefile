@@ -1,4 +1,5 @@
 DIFF ?= diff --strip-trailing-cr -u
+CREATE_DOCS_LUA ?= ../.tools/create-docs.lua
 
 test:
 	@pandoc --lua-filter=pagebreak.lua sample.md | $(DIFF) expected.html -
@@ -9,16 +10,14 @@ page: .build/index.html .build/sample.pdf .build/sample.docx
 
 .PHONY: page
 
-.build/index.html: README.md sample.md pagebreak.lua
+.build/index.html: README.md sample.md pagebreak.lua $(CREATE_DOCS_LUA)
 	@mkdir -p .build
-	@pandoc --standalone \
-	    --lua-filter=../.utils/create-docs.lua \
-	    --metadata=sample_files:sample.md \
-	    --metadata=code_file:pagebreak.lua \
-	    --metadata=pagetitle:pagebreak \
-	    --css="https://cdn.jsdelivr.net/gh/kognise/water.css@latest/dist/light.css" \
-	    --self-contained \
-	    --toc \
+	@FILTER_FILE=pagebreak.lua \
+	 SAMPLE_FILE=sample.md \
+	 pandoc --standalone \
+	    --lua-filter=$(CREATE_DOCS_LUA) \
+	    --variable=pagetitle:pagebreak.lua \
+	    --css="https://cdn.jsdelivr.net/gh/kognise/water.css@latest/dist/light.min.css" \
 	    --output=$@ $<
 
 .build/sample.pdf: sample.md pagebreak.lua

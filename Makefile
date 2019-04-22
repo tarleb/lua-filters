@@ -12,3 +12,16 @@ docker-test:
 
 docker-test-image: .tools/Dockerfile
 	docker build --tag $(LUA_FILTERS_TEST_IMAGE) --file $< .
+
+.build:
+	mkdir -p $@
+
+.build/pages: .tools/makepages.sh
+	mkdir -p $@
+	$< $(FILTERS)
+
+page: .tools/makepages.sh
+	mkdir -p $@
+	$< $(FILTERS)
+
+.PHONY: page
