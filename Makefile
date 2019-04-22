@@ -26,8 +26,8 @@ docker-test-image: .tools/Dockerfile
 	docker build --tag $(LUA_FILTERS_TEST_IMAGE) --file $< .
 
 # Build a single collection of Lua filters
-.PHONY: collection
 collection: .build/lua-filters
+.PHONY: collection
 
 .PHONY: docs
 docs:
@@ -52,6 +52,17 @@ docs:
 	rm -f $@
 	(cd .build && zip -r -9 lua-filters.zip lua-filters)
 	@printf "Archive written to '%s'\n" "$@"
+
+# HTML pages for selected filters
+.build/pages: .tools/makepages.sh
+	mkdir -p $@
+	$< $(FILTERS)
+
+page: .tools/makepages.sh
+	mkdir -p $@
+	$< $(FILTERS)
+
+.PHONY: page
 
 clean:
 	rm -rf .build
