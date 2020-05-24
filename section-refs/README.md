@@ -9,7 +9,7 @@ the output of `pandoc-citeproc`, and so must be run after
 pandoc input.md -F pandoc-citeproc --lua-filter section-refs.lua
 ~~~
 
-It allows curstomization through two metadata fields:
+It allows customization through two metadata fields:
 `reference-section-title` and `section-refs-level` (default 1). The
 `section-refs-level` variable controls what level the biblography will
 occur at the end of. The header of the generated references section will
