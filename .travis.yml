@@ -18,6 +18,9 @@ addons:
       - default-jre
       - graphviz
       - inkscape
+      - lua5.3
+      - lua5.3-dev
+      - luarocks
       - python3
       - python3-pip
       - python3-tk
@@ -52,6 +55,14 @@ before_install:
   popd
 - export PATH=$HOME/pandoc-$PANDOCVERSION/bin:$PATH
 - export PLANTUML=$HOME/plantuml.jar
+# Install extra Lua dependencies for debug example
+- |
+  luarocks install --local mobdebug
+  luarocks install --local luasocket
+# Ensure the extra libraries can be found
+- |
+  eval "$(luarocks path)"
+
 
 install: []
 
