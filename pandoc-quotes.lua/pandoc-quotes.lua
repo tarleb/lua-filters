@@ -177,6 +177,7 @@ local package = package
 
 local pandoc = pandoc
 if not pandoc.utils then pandoc.utils = require 'pandoc.utils' end
+local PANDOC_VERSION = PANDOC_VERSION
 
 local _ENV = M
 
@@ -359,6 +360,17 @@ function map (f, list)
     return ret
 end
 
+--- Returns the type of a metadata value.
+--
+-- @param v a metadata value
+-- @treturn string one of `Blocks`, `Inlines`, `List`, `Map`, `string`, `boolean`
+function metatype (v)
+  if PANDOC_VERSION <= '2.16.2' then
+    return v.t and type(v) == 'table' and v.t:gsub('^Meta', '') or type(v)
+  end
+  return pandoc.utils.type(v) == 'table' and 'Map' or pandoc.utils.type(v)
+end
+
 do
     local stringify = pandoc.utils.stringify
 
@@ -371,7 +383,7 @@ do
     -- @treturn[2] `nil` if an error occurred.
     -- @treturn[2] string An error message.
     function get_quotation_marks (meta)
-        if meta.t == 'MetaInlines' then
+        if metatype(meta) == 'Inlines' then
             local marks = stringify(meta)
             if text.len(marks) ~= 4 then
                 return nil, 'not four quotation marks'
@@ -379,7 +391,7 @@ do
             local ret = {}
             for i = 1, 4 do ret[i] = text.sub(marks, i, i) end
             return ret
-        elseif meta.t == 'MetaList' then
+        elseif metatype(meta) == 'List' then
             local marks = map(stringify, meta)
             if #marks ~= 4 then
                 return nil, 'not four quotation marks'
