@@ -2,11 +2,6 @@
 
 Filter to include other files in the document.
 
-## Prerquisites
-
-This filter needs to be executed before most other filters. Any
-filter that runs before this will only see the empty codeblocks.
-
 ## Usage
 
 Use a special code block with class `include` to include files of
@@ -15,6 +10,12 @@ filename of a file, parsed, and the result is added to the
 document.
 
 Metadata from included files is discarded.
+
+### Filter order
+
+This filter should to be executed first, before other filters. Any
+filter that runs before this will not have access to the included
+contents, but will only see empty code blocks.
 
 ### Shifting Headings
 
@@ -74,6 +75,7 @@ document, and another file `a/b/c.md` should be included from
 this case `b/c.md`. The full relative path will be automatically
 generated in the final document. The same goes for image paths and
 codeblock file paths using the `include-code-files` filter.
+
 
 ## Example
 
